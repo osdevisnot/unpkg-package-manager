@@ -1,6 +1,29 @@
 # unpkg-package-manager
 
-> a package manager for the web
+> offline first, fast af, package manager for the web
+
+## Principles
+
+- no semantic versioning (all versions are exact always)
+- no dependency resolution (add all your deps as top level deps)
+- downloads minimal set of files, manually specify additional in `upm.yml` if needed
+
+## Usage
+
+### `init`
+
+- creates `upm.yml` file with defaults
+- reads dependencies from `package.json` if one exists
+
+### `install`
+
+- installs dependencies and creates `upm-lock.yml` file.
+- just install dependencies if `upm-lock.yml` exists
+
+### `update`
+
+- update all dependencies to their latest version
+- update one dependency if an argument is provided
 
 ## Contributing
 

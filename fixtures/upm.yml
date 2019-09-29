@@ -1,0 +1,7 @@
+_cdn: 'https://unpkg.com'
+_loc: web_modules
+dependencies:
+  '@xhtm/xhtm': 0.1.3
+  '@znix/znix': 0.1.17
+  klick: 0.1.5
+  preact: 8.5.2

@@ -1,0 +1,12 @@
+{
+  "name": "fixtures",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@xhtm/xhtm": "^0.1.3",
+    "@znix/znix": "^0.1.17",
+    "klick": "^0.1.5",
+    "preact": "^8.5.2"
+  }
+}

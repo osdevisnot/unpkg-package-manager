@@ -1,0 +1,16 @@
+'@xhtm/xhtm':
+  0.1.3:
+    - /@xhtm/xhtm@0.1.3/package.json
+    - /@xhtm/xhtm@0.1.3/dist/index.js
+'@znix/znix':
+  0.1.17:
+    - /@znix/znix@0.1.17/package.json
+    - /@znix/znix@0.1.17/dist/znix.js
+klick:
+  0.1.5:
+    - /klick@0.1.5/package.json
+    - /klick@0.1.5/dist/klick.js
+preact:
+  8.5.2:
+    - /preact@8.5.2/package.json
+    - /preact@8.5.2/dist/preact.min.js
