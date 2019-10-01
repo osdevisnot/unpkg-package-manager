@@ -20,6 +20,7 @@
 		"lint": "tslib lint",
 		"prepare": "tslib build",
 		"pub": "tslib pub",
+		"postpub": "docker build --no-cache -t upm .",
 		"setup": "tslib setup",
 		"test": "tslib test",
 		"watch": "tslib watch"

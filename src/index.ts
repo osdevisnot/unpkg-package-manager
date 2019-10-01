@@ -74,7 +74,6 @@ switch (command) {
 				await download(store.upm._cdn, store.upm._loc, dep, version);
 			}
 			if (!hasLock) {
-				console.log('TCL: install -> store.lock', store.lock);
 				dumpYaml(paths.lock, store.lock);
 			}
 		};
