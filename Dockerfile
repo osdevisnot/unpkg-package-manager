@@ -20,5 +20,9 @@ RUN cat upm-lock.yml
 
 RUN find web_modules
 
+RUN upm 
+
+RUN find web_modules
+
 CMD [ "sh" ]
 
