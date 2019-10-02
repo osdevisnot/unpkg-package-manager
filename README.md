@@ -6,7 +6,7 @@
 
 - no semantic versioning (all versions are exact always)
 - no dependency resolution (add all your deps as top level deps)
-- downloads minimal set of files, manually specify additional in `upm.yml` if needed
+- downloads minimal set of files
 
 ## Usage
 

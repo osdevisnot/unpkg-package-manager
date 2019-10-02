@@ -21,14 +21,14 @@ const paths = {
 
 const store: any = { pkg: false, upm: false, lock: false };
 
-const download = async (url, loc, dep, ver) => {
-	const urls = ['', 'package.json'].map(u => `${url}/${dep}@${ver}` + (u !== '' ? `/${u}` : ''));
+const download = async (cdn, loc, dep, ver, files?) => {
+	const urls = files ? files : ['', 'package.json'].map(u => `${dep}@${ver}` + (u !== '' ? `/${u}` : ''));
 	const queue = [];
-	for (const u of urls) {
+	for (const url of urls) {
 		queue.push(
-			fetch(u).then(res => {
-				const dest = res.url.replace(url, loc);
-				store.lock[dep][ver].push(dest.replace(loc, ''));
+			fetch(`${cdn}/${url}`).then(res => {
+				const dest = res.url.replace(cdn, loc);
+				store.lock[dep].resolved.push(dest.replace(loc + '/', ''));
 				const target = dest.replace(`@${ver}/`, '/');
 				const targetDirectory = target.substring(0, target.lastIndexOf('/'));
 				mkdirSync(targetDirectory, { recursive: true });
@@ -39,6 +39,22 @@ const download = async (url, loc, dep, ver) => {
 	return await Promise.all(queue);
 };
 
+const installWithoutStore = async (cdn, loc, deps) => {
+	for (const dep of Object.keys(deps)) {
+		const version = deps[dep].replace(/^\^|^\~|^\*/, '');
+		if (!store.lock[dep]) {
+			store.lock[dep] = { version, resolved: [] };
+		}
+		await download(cdn, loc, dep, version);
+	}
+};
+
+const installWithStore = async (cdn, loc, deps) => {
+	for (const dep of Object.keys(deps)) {
+		await download(cdn, loc, dep, deps[dep].version, deps[dep].resolved);
+	}
+};
+
 switch (command) {
 	case 'init':
 		let pkg = { dependencies: {} };
@@ -46,34 +62,24 @@ switch (command) {
 			// tslint:disable-next-line:no-var-requires
 			pkg = require(paths.pkg);
 		}
-		const dependencies = pkg.dependencies;
-		for (const dep of Object.keys(dependencies)) {
-			dependencies[dep] = dependencies[dep].replace(/^\^|^\~|^\*/, '');
+		const deps = pkg.dependencies;
+		for (const dep of Object.keys(deps)) {
+			deps[dep] = deps[dep].replace(/^\^|^\~|^\*/, '');
 		}
-		dumpYaml(paths.upm, { _cdn, _loc, dependencies });
+		dumpYaml(paths.upm, { _cdn, _loc, deps });
 		break;
 	case 'update':
 		break;
 	default:
 		const install = async () => {
+			store.upm = loadYaml(paths.upm);
 			store.lock = loadYaml(paths.lock);
 			const hasLock = store.lock !== false;
-			if (!store.lock) {
+			if (hasLock) {
+				await installWithStore(store.upm._cdn, store.upm._loc, store.lock);
+			} else {
 				store.lock = {};
-			}
-			store.upm = loadYaml(paths.upm);
-			const deps = store.upm.dependencies;
-			for (const dep of Object.keys(deps)) {
-				const version = deps[dep].replace(/^\^|^\~|^\*/, '');
-				if (!store.lock[dep]) {
-					store.lock[dep] = {};
-				}
-				if (!store.lock[dep][version]) {
-					store.lock[dep][version] = [];
-				}
-				await download(store.upm._cdn, store.upm._loc, dep, version);
-			}
-			if (!hasLock) {
+				await installWithoutStore(store.upm._cdn, store.upm._loc, store.upm.deps);
 				dumpYaml(paths.lock, store.lock);
 			}
 		};
