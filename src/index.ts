@@ -5,6 +5,8 @@ import { join } from 'path';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
 
+const ora = require('ora');
+
 const streamPipeline = promisify(pipeline);
 
 import { dumpYaml, loadYaml } from './yaml';
@@ -76,12 +78,19 @@ switch (command) {
 			store.upm = loadYaml(paths.upm);
 			store.lock = loadYaml(paths.lock);
 			const hasLock = store.lock !== false;
-			if (hasLock) {
-				await installWithStore(store.upm._cdn, store.upm._loc, store.lock);
-			} else {
-				store.lock = {};
-				await installWithoutStore(store.upm._cdn, store.upm._loc, store.upm.deps);
-				dumpYaml(paths.lock, store.lock);
+			const spinner = ora('Installing Dependencies...').start();
+			try {
+				if (hasLock) {
+					await installWithStore(store.upm._cdn, store.upm._loc, store.lock);
+				} else {
+					store.lock = {};
+					await installWithoutStore(store.upm._cdn, store.upm._loc, store.upm.deps);
+					dumpYaml(paths.lock, store.lock);
+				}
+				spinner.succeed();
+			} catch (e) {
+				spinner.fail();
+				console.trace(e.message);
 			}
 		};
 		install();

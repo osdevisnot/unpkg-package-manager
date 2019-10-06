@@ -32,6 +32,7 @@
 		"@types/node": "^12.7.8",
 		"js-yaml": "^3.13.1",
 		"node-fetch": "^2.6.0",
+		"ora": "^4.0.2",
 		"tslib-cli": "^5.0.22"
 	},
 	"peerDependencies": {}
