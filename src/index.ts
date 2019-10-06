@@ -4,9 +4,10 @@ import { join } from 'path';
 
 import { pipeline } from 'stream';
 import { promisify } from 'util';
+
 const streamPipeline = promisify(pipeline);
 
-import { dumpYaml, loadYaml } from './utils';
+import { dumpYaml, loadYaml } from './yaml';
 
 const command = process.argv[2];
 
