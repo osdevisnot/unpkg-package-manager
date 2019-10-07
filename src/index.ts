@@ -10,13 +10,9 @@ const ora = require('ora');
 const streamPipeline = promisify(pipeline);
 
 import { dumpYaml, loadYaml } from './yaml';
+import { cdn, loc, SEMVER_REGEX } from './constants';
 
 const command = process.argv[2];
-
-const CDN = 'https://unpkg.com';
-const LOC = 'web_modules';
-
-const SEMVER_REGEX = /^\^|^\~|^\*/;
 
 const paths = {
 	pkg: join(process.cwd(), 'package.json'),
@@ -71,7 +67,7 @@ switch (command) {
 		for (const dep of Object.keys(deps)) {
 			deps[dep] = deps[dep].replace(SEMVER_REGEX, '');
 		}
-		dumpYaml(paths.upm, { cdn: CDN, loc: LOC, deps });
+		dumpYaml(paths.upm, { cdn, loc, deps });
 		break;
 	case 'update':
 		break;
@@ -83,10 +79,10 @@ switch (command) {
 			const spinner = ora('Installing Dependencies...').start();
 			try {
 				if (hasLock) {
-					await installWithLock(store.upm.cdn, store.upm.loc, store.lock);
+					await installWithLock(store.upm.cdn || cdn, store.upm.loc, store.lock);
 				} else {
 					store.lock = {};
-					await installWithoutLock(store.upm.cdn, store.upm.loc, store.upm.deps);
+					await installWithoutLock(store.upm.cdn || cdn, store.upm.loc, store.upm.deps);
 					dumpYaml(paths.lock, store.lock);
 				}
 				spinner.succeed();
