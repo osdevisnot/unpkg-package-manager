@@ -16,6 +16,8 @@ const command = process.argv[2];
 const _cdn = 'https://unpkg.com';
 const _loc = 'web_modules';
 
+const SEMVER_REGEX = /^\^|^\~|^\*/;
+
 const paths = {
 	pkg: join(process.cwd(), 'package.json'),
 	upm: join(process.cwd(), 'upm.yml'),
@@ -42,9 +44,9 @@ const download = async (cdn, loc, dep, ver, files?) => {
 	return await Promise.all(queue);
 };
 
-const installWithoutStore = async (cdn, loc, deps) => {
+const installWithoutLock = async (cdn, loc, deps) => {
 	for (const dep of Object.keys(deps)) {
-		const version = deps[dep].replace(/^\^|^\~|^\*/, '');
+		const version = deps[dep].replace(SEMVER_REGEX, '');
 		if (!store.lock[dep]) {
 			store.lock[dep] = { version, resolved: [] };
 		}
@@ -52,7 +54,7 @@ const installWithoutStore = async (cdn, loc, deps) => {
 	}
 };
 
-const installWithStore = async (cdn, loc, deps) => {
+const installWithLock = async (cdn, loc, deps) => {
 	for (const dep of Object.keys(deps)) {
 		await download(cdn, loc, dep, deps[dep].version, deps[dep].resolved);
 	}
@@ -67,7 +69,7 @@ switch (command) {
 		}
 		const deps = pkg.dependencies;
 		for (const dep of Object.keys(deps)) {
-			deps[dep] = deps[dep].replace(/^\^|^\~|^\*/, '');
+			deps[dep] = deps[dep].replace(SEMVER_REGEX, '');
 		}
 		dumpYaml(paths.upm, { _cdn, _loc, deps });
 		break;
@@ -81,10 +83,10 @@ switch (command) {
 			const spinner = ora('Installing Dependencies...').start();
 			try {
 				if (hasLock) {
-					await installWithStore(store.upm._cdn, store.upm._loc, store.lock);
+					await installWithLock(store.upm._cdn, store.upm._loc, store.lock);
 				} else {
 					store.lock = {};
-					await installWithoutStore(store.upm._cdn, store.upm._loc, store.upm.deps);
+					await installWithoutLock(store.upm._cdn, store.upm._loc, store.upm.deps);
 					dumpYaml(paths.lock, store.lock);
 				}
 				spinner.succeed();
