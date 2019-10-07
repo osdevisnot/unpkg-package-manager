@@ -18,7 +18,7 @@ export const loadYaml = (srcPath, exitOnFailure = false) => {
 
 export const dumpYaml = (destPath, obj, exitOnFailure = true) => {
 	try {
-		return writeFileSync(destPath, yaml.safeDump(obj, { sortKeys: true }), 'utf-8');
+		return writeFileSync(destPath, yaml.safeDump(obj), 'utf-8');
 	} catch (e) {
 		return handleFsError(e, exitOnFailure);
 	}

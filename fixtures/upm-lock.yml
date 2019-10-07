@@ -1,20 +1,20 @@
 '@xhtm/xhtm':
+  version: 0.1.3
   resolved:
     - '@xhtm/xhtm@0.1.3/package.json'
     - '@xhtm/xhtm@0.1.3/dist/index.js'
-  version: 0.1.3
 '@znix/znix':
+  version: 0.1.17
   resolved:
     - '@znix/znix@0.1.17/package.json'
     - '@znix/znix@0.1.17/dist/znix.js'
-  version: 0.1.17
 klick:
+  version: 0.1.5
   resolved:
     - klick@0.1.5/package.json
     - klick@0.1.5/dist/klick.js
-  version: 0.1.5
 preact:
+  version: 8.5.2
   resolved:
     - preact@8.5.2/package.json
     - preact@8.5.2/dist/preact.min.js
-  version: 8.5.2
