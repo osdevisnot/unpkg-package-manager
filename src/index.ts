@@ -1,17 +1,12 @@
-import { createWriteStream, existsSync, mkdirSync } from 'fs';
-import fetch from 'node-fetch';
 import { join } from 'path';
+import { existsSync } from 'fs';
 
-import { pipeline } from 'stream';
-import { promisify } from 'util';
+import { cdn, loc, SEMVER_REGEX } from './constants';
+import { dumpYaml, loadYaml } from './yaml';
+import { download } from './download';
+import { error } from './logs';
 
 const ora = require('ora');
-
-const streamPipeline = promisify(pipeline);
-import { log, warn, error, success } from './logs';
-
-import { dumpYaml, loadYaml } from './yaml';
-import { cdn, loc, SEMVER_REGEX } from './constants';
 
 const command = process.argv[2];
 
@@ -23,31 +18,14 @@ const paths = {
 
 const store: any = { pkg: false, upm: false, lock: false };
 
-const download = async (cdn, loc, dep, ver, files?) => {
-	const urls = files ? files : ['', 'package.json'].map(u => `${dep}@${ver}` + (u !== '' ? `/${u}` : ''));
-	const queue = [];
-	for (const url of urls) {
-		queue.push(
-			fetch(`${cdn}/${url}`).then(res => {
-				const dest = res.url.replace(cdn, loc);
-				store.lock[dep].resolved.push(dest.replace(loc + '/', ''));
-				const target = dest.replace(`@${ver}/`, '/');
-				const targetDirectory = target.substring(0, target.lastIndexOf('/'));
-				mkdirSync(targetDirectory, { recursive: true });
-				return streamPipeline(res.body, createWriteStream(target));
-			}),
-		);
-	}
-	return await Promise.all(queue);
-};
-
 const installWithoutLock = async (cdn, loc, deps) => {
 	for (const dep of Object.keys(deps)) {
 		const version = deps[dep].replace(SEMVER_REGEX, '');
 		if (!store.lock[dep]) {
 			store.lock[dep] = { version, resolved: [] };
 		}
-		await download(cdn, loc, dep, version);
+		const files = ['', 'package.json'].map(f => `${dep}@${version}` + (f !== '' ? `/${f}` : ''));
+		await download(cdn, loc, dep, version, files, store.lock);
 	}
 };
 
