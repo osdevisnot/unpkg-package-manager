@@ -52,7 +52,7 @@ switch (command) {
 		break;
 	default:
 		const install = async () => {
-			store.upm = loadYaml(paths.upm);
+			store.upm = { cdn, loc, ...loadYaml(paths.upm) };
 			store.lock = loadYaml(paths.lock);
 			const hasUpm = store.upm !== false;
 			const hasLock = store.lock !== false;
@@ -63,10 +63,10 @@ switch (command) {
 			const spinner = ora('Installing Dependencies...').start();
 			try {
 				if (hasLock) {
-					await installWithLock(store.upm.cdn || cdn, store.upm.loc, store.lock);
+					await installWithLock(store.upm.cdn, store.upm.loc, store.lock);
 				} else {
 					store.lock = {};
-					await installWithoutLock(store.upm.cdn || cdn, store.upm.loc, store.upm.deps);
+					await installWithoutLock(store.upm.cdn, store.upm.loc, store.upm.deps);
 					dumpYaml(paths.lock, store.lock);
 				}
 				spinner.succeed();
