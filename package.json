@@ -1,6 +1,6 @@
 {
 	"name": "unpkg-package-manager",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "offline first, fast af, package manager for the web",
 	"repository": "osdevisnot/unpkg-package-manager",
 	"license": "MIT",
