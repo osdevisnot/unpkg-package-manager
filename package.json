@@ -14,6 +14,7 @@
 	},
 	"scripts": {
 		"build": "ncc build src/index.ts -o dist",
+		"postbuild": "rm -rf dist/package.json",
 		"coverage": "tslib coverage",
 		"coveralls": "tslib coveralls",
 		"format": "tslib format",
@@ -28,9 +29,9 @@
 	"prettier": "tslib-cli",
 	"dependencies": {},
 	"devDependencies": {
-		"@zeit/ncc": "^0.20.5",
 		"@types/jest": "^24.0.18",
 		"@types/node": "^12.7.11",
+		"@zeit/ncc": "^0.20.5",
 		"chalk": "^3.0.0-beta.1",
 		"js-yaml": "^3.13.1",
 		"node-fetch": "^2.6.0",
