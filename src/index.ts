@@ -6,8 +6,7 @@ import { download } from './download';
 import { error } from './logs';
 import { dumpYaml, loadYaml } from './yaml';
 
-// tslint:disable-next-line:no-var-requires
-const ora = require('ora');
+import ora from 'ora';
 
 const command = process.argv[2];
 

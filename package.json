@@ -13,12 +13,12 @@
 		"upm": "dist/index.js"
 	},
 	"scripts": {
-		"build": "tslib build",
+		"build": "ncc build src/index.ts -o dist",
 		"coverage": "tslib coverage",
 		"coveralls": "tslib coveralls",
 		"format": "tslib format",
 		"lint": "tslib lint",
-		"prepare": "tslib build",
+		"prepare": "npm run build",
 		"pub": "tslib pub",
 		"postpub": "docker build --no-cache -t upm .",
 		"setup": "tslib setup",
@@ -28,6 +28,7 @@
 	"prettier": "tslib-cli",
 	"dependencies": {},
 	"devDependencies": {
+		"@zeit/ncc": "^0.20.5",
 		"@types/jest": "^24.0.18",
 		"@types/node": "^12.7.11",
 		"chalk": "^3.0.0-beta.1",
