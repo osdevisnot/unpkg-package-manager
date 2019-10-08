@@ -11,7 +11,7 @@
 		"moduleResolution": "node",
 		"outDir": "dist",
 		"strict": false,
-		"target": "esnext",
+		"target": "es2015",
 		"removeComments": true,
 		"baseUrl": ".",
 		"paths": { "unpkg-package-manager": ["src/index.tsx"] }
