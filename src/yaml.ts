@@ -3,8 +3,12 @@ import { readFileSync, writeFileSync } from 'fs';
 import yaml from 'js-yaml';
 
 const handleFsError = (e, exitOnFailure) => {
-	if (e && e.code !== 'ENOENT' && e.message) console.error(e.message);
-	if (exitOnFailure) process.exit(1);
+	if (e && e.code !== 'ENOENT' && e.message) {
+		console.error(e.message);
+	}
+	if (exitOnFailure) {
+		process.exit(1);
+	}
 	return false;
 };
 

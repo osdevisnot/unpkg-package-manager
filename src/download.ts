@@ -11,7 +11,9 @@ export const download = async (cdn, loc, dep, ver, urls, lock = false) => {
 		queue.push(
 			fetch(`${cdn}/${url}`).then(res => {
 				const dest = res.url.replace(cdn, loc);
-				if (lock) lock[dep].resolved.push(dest.replace(loc + '/', ''));
+				if (lock) {
+					lock[dep].resolved.push(dest.replace(loc + '/', ''));
+				}
 				const target = dest.replace(`@${ver}/`, '/');
 				const targetDirectory = target.substring(0, target.lastIndexOf('/'));
 				mkdirSync(targetDirectory, { recursive: true });

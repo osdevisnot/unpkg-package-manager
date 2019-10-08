@@ -1,11 +1,12 @@
-import { join } from 'path';
 import { existsSync } from 'fs';
+import { join } from 'path';
 
 import { cdn, loc, SEMVER_REGEX } from './constants';
-import { dumpYaml, loadYaml } from './yaml';
 import { download } from './download';
 import { error } from './logs';
+import { dumpYaml, loadYaml } from './yaml';
 
+// tslint:disable-next-line:no-var-requires
 const ora = require('ora');
 
 const command = process.argv[2];

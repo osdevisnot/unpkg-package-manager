@@ -1,3 +1,4 @@
+// tslint:disable-next-line:no-var-requires
 const chalk = require('chalk');
 
 export const log = msg => console.log(chalk.gray(msg));
