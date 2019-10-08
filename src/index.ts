@@ -8,6 +8,7 @@ import { promisify } from 'util';
 const ora = require('ora');
 
 const streamPipeline = promisify(pipeline);
+import { log, warn, error, success } from './logs';
 
 import { dumpYaml, loadYaml } from './yaml';
 import { cdn, loc, SEMVER_REGEX } from './constants';
@@ -61,7 +62,7 @@ switch (command) {
 		let pkg = { dependencies: {} };
 		if (existsSync(paths.pkg)) {
 			// tslint:disable-next-line:no-var-requires
-			pkg = require(paths.pkg);
+			pkg = { ...pkg, ...require(paths.pkg) };
 		}
 		const deps = pkg.dependencies;
 		for (const dep of Object.keys(deps)) {
@@ -75,7 +76,12 @@ switch (command) {
 		const install = async () => {
 			store.upm = loadYaml(paths.upm);
 			store.lock = loadYaml(paths.lock);
+			const hasUpm = store.upm !== false;
 			const hasLock = store.lock !== false;
+			if (!hasUpm) {
+				error('`upm.yml` not found. Try `upm init` to initialize the repo !!');
+				process.exit(1);
+			}
 			const spinner = ora('Installing Dependencies...').start();
 			try {
 				if (hasLock) {

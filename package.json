@@ -29,11 +29,12 @@
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jest": "^24.0.18",
-		"@types/node": "^12.7.8",
+		"@types/node": "^12.7.11",
+		"chalk": "^2.4.2",
 		"js-yaml": "^3.13.1",
 		"node-fetch": "^2.6.0",
 		"ora": "^4.0.2",
-		"tslib-cli": "^5.0.22"
+		"tslib-cli": "^5.0.24"
 	},
 	"peerDependencies": {}
 }
