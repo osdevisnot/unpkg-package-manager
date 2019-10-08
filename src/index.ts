@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { existsSync } from 'fs';
 import { join } from 'path';
 
@@ -7,7 +6,8 @@ import { download } from './download';
 import { error } from './logs';
 import { dumpYaml, loadYaml } from './yaml';
 
-import ora from 'ora';
+// tslint:disable-next-line:no-var-requires
+const ora = require('ora');
 
 const command = process.argv[2];
 
